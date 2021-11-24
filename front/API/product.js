@@ -16,5 +16,14 @@ fetch("http://localhost:3000/api/products/" + id)
     let image = document.createElement('img');
     image.src = data.imageUrl;
     img.appendChild(image);
+
+    for (let colors of data.colors){
+      console.log(colors);
+      let productColors = document.createElement("option");
+        document.querySelector("#colors").appendChild(productColors);
+        productColors.value = colors;
+        productColors.innerHTML = colors;
+   }
     });
   
+    
