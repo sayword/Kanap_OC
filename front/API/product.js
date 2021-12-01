@@ -41,14 +41,14 @@ fetch("http://localhost:3000/api/products/" + id)
         let panierStorage = localStorage.getItem("cart"); 
 
         if (panierStorage === null) {
-          let cart = [];
+          let cart = []; // je mets les données a recup dans un tableau
           cart.push({
             "idKanap": idKanap,
             "color": color,
             "quantity": quantity
           });}
         else {
-          // si il y a deja des trucs dans le panier alors += avec le nouveau produit
+          // si il y a deja des trucs dans le panier alors += avec le nouveau produit 
           }
         }
       }
