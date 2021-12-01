@@ -25,12 +25,32 @@ fetch("http://localhost:3000/api/products/" + id)
         productColors.innerHTML = colors;
    }
     });
-  
-    
 
-    //1. je créer la fonction pour le panier
-    //2. Je fais une condition if pour que le client choisisse au moins la couleur et que la quantité ne soit pas 0
-    //3. Ensuite, si la condition est respecter je recup les informations du canapé ansi que la quantité et la couleur
-    //4. Je fais un alert comme quoi ça a été ajouter au panier 
-    //5. Je créer un stockage
-    //6. Le stockage je le met sous forme de tableau js avec les informations du produit 
+    //Fonction pour le panier 
+
+    function addToCart() {
+
+      let quantity = Number(document.querySelector("input").value);
+      let color = document.querySelector("#colors").value;
+
+      if ( ((quantity < 1) || (quantity > 100)) || (quantity == null) || (selectedColor == "")) {
+        alert("Veuillez choisir une couleur et ajouter une quantité comprise entre 1 et 100 s'il vous plait.");
+      } else { 
+        
+        alert("Vous avez sélectionner " + quantity + " en quantité et " + color + " en couleur.")
+        let panierStorage = localStorage.getItem("cart"); 
+
+        if (panierStorage === null) {
+          let cart = [];
+          cart.push({
+            "idKanap": idKanap,
+            "color": color,
+            "quantity": quantity
+          });}
+        else {
+          // si il y a deja des trucs dans le panier alors += avec le nouveau produit
+          }
+        }
+      }
+    
+    
