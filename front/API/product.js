@@ -41,14 +41,23 @@ fetch("http://localhost:3000/api/products/" + id)
         let panierStorage = localStorage.getItem("cart"); 
 
         if (panierStorage === null) {
-          let cart = []; // je mets les données a recup dans un tableau
+          let cart = [];
           cart.push({
             "idKanap": idKanap,
             "color": color,
             "quantity": quantity
           });}
         else {
-          // si il y a deja des trucs dans le panier alors += avec le nouveau produit 
+
+         // si il y a deja des trucs dans le panier alors += avec le nouveau produit
+         // modifier la quantité du produit en retrouvant l'index du produit ? En faisant un if comme ci dessous ?
+         if() {
+          parseInt(quantiteProduit) + parseInt(quantiteProduit);
+          quantiteProduit = newQuantite;
+         }
+
+
+            cart.push ([idKanap, color, quantity])
           }
         }
       }
