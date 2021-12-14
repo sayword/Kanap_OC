@@ -46,20 +46,20 @@ fetch("http://localhost:3000/api/products/" + id)
             "idKanap": idKanap,
             "color": color,
             "quantity": quantity
-          });}
-        else {
-
-         // si il y a deja des trucs dans le panier alors += avec le nouveau produit
-         // modifier la quantité du produit en retrouvant l'index du produit ? En faisant un if comme ci dessous ?
-         if() {
-          parseInt(quantiteProduit) + parseInt(quantiteProduit);
-          quantiteProduit = newQuantite;
-         }
-
-
-            cart.push ([idKanap, color, quantity])
-          }
+          })
+          localStorage.setItem("cart", JSON.stringify(cart));
         }
-      }
-    
+        else {
+          // si le produit et sa couleur est pareil alors juste rajouter la nouvelle quantité + l'ancienne quantité
+          let cart = JSON.parse(panierStorage);
+            cart((product) => { 
+            if ((product.color == selectedColor)&&(product.idKanap == idKanap)) {
+              let newCart = [];
+              product.quantity += quantity;
+              newCart.push({
+              "quantity": product.quantity
+              })} 
+          });
+        }
+      }}
     
