@@ -48,6 +48,7 @@ fetch("http://localhost:3000/api/products/" + id)
             "quantity": quantity
           })
           localStorage.setItem("cart", JSON.stringify(cart));
+          alert("Votre sélection à été prise en compte");
         }
         else {
           // si le produit et sa couleur est pareil alors juste rajouter la nouvelle quantité + l'ancienne quantité
@@ -60,6 +61,16 @@ fetch("http://localhost:3000/api/products/" + id)
               "quantity": product.quantity
               })} 
           });
+          else {
+              
+             // si le produit n'est pas déjà dans le panier mais que le panier n'est pas vide
+            product.push(product);
+            localStorage.setItem("produit", JSON.stringify());
+            alert("Votre sélection à été prise en compte");
+          }
         }
       }}
-    
+
+
+
+      
