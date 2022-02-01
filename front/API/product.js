@@ -1,13 +1,17 @@
-const parametre = window.location.href;
-const kanapUrl = new URL(parametre);
-const id = kanapUrl.searchParams.get("id");
+//Récupération de l'id dans l'url
+let param = window.location.href;
+let url = new URL(param);
+let productId = url.searchParams.get("id");
 
-fetch("http://localhost:3000/api/products/" + id)
+console.log(productId)
+
+fetch("http://localhost:3000/api/products/" + productId)
 .then(function (res) {
     if (res.ok) {
       return res.json();
     }
   })
+// recuperation du titre etc..
   .then(data => {
     document.querySelector("#title").innerHTML = data.name;
     document.querySelector("#description").innerHTML = data.description;
@@ -16,7 +20,7 @@ fetch("http://localhost:3000/api/products/" + id)
     let image = document.createElement('img');
     image.src = data.imageUrl;
     img.appendChild(image);
-
+// choix des couleurs du canapé
     for (let colors of data.colors){
       console.log(colors);
       let productColors = document.createElement("option");
@@ -25,52 +29,20 @@ fetch("http://localhost:3000/api/products/" + id)
         productColors.innerHTML = colors;
    }
     });
+// recup le btn
+    const addToCart = document.querySelector("#addToCart");
+// creation d'un evenement au click du btn
+    addToCart.addEventListener("click", () => {
+        let productColor = document.querySelector("#colors").value;
+        let productQuantity = document.querySelector("#quantity").value;
+// au click du btn on verifie les elements suivant : si l'utilisateur a bien choisit une couleur et une quantité
+        if (productColor == "") {
+             alert("Veuillez choisir une couleur");
+         } else if (productQuantity == 0 || productQuantity >= 101) {
+            alert("Choisissez la quantité compris entre 1 et 100 merci");
+         } 
+   });
 
-    //Fonction pour le panier 
-
-    function addToCart() {
-
-      let quantity = Number(document.querySelector("input").value);
-      let color = document.querySelector("#colors").value;
-
-      if ( ((quantity < 1) || (quantity > 100)) || (quantity == null) || (selectedColor == "")) {
-        alert("Veuillez choisir une couleur et ajouter une quantité comprise entre 1 et 100 s'il vous plait.");
-      } else { 
-        
-        alert("Vous avez sélectionner " + quantity + " en quantité et " + color + " en couleur.")
-        let panierStorage = localStorage.getItem("cart"); 
-
-        if (panierStorage === null) {
-          let cart = [];
-          cart.push({
-            "idKanap": idKanap,
-            "color": color,
-            "quantity": quantity
-          })
-          localStorage.setItem("cart", JSON.stringify(cart));
-          alert("Votre sélection à été prise en compte");
-        }
-        else {
-          // si le produit et sa couleur est pareil alors juste rajouter la nouvelle quantité + l'ancienne quantité
-          let cart = JSON.parse(panierStorage);
-            cart((product) => { 
-            if ((product.color == selectedColor)&&(product.idKanap == idKanap)) {
-              let newCart = [];
-              product.quantity += quantity;
-              newCart.push({
-              "quantity": product.quantity
-              })} 
-          });
-          else {
-              
-             // si le produit n'est pas déjà dans le panier mais que le panier n'est pas vide
-            product.push(product);
-            localStorage.setItem("produit", JSON.stringify());
-            alert("Votre sélection à été prise en compte");
-          }
-        }
-      }}
-
-
-
-      
+   //Ensuite 2 possibilités :
+   //  si le panier est vide alors je rajoute les elements
+   // si dans le panier il y a deja des elements alors je rajoute les nouveaux elements aux anciens
