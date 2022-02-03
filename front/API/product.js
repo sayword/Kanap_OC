@@ -29,6 +29,8 @@ fetch("http://localhost:3000/api/products/" + productId)
         productColors.innerHTML = colors;
    }
     });
+//je créer le tableau à envoyer au panier
+    let registerItem = []; 
 // recup le btn
     const addToCart = document.querySelector("#addToCart");
 // creation d'un evenement au click du btn
@@ -41,8 +43,24 @@ fetch("http://localhost:3000/api/products/" + productId)
          } else if (productQuantity == 0 || productQuantity >= 101) {
             alert("Choisissez la quantité compris entre 1 et 100 merci");
          } 
-   });
+         else {
+              
+          let productInCart = localStorage.getItem('productInCart');
+        
+// je créer un tableau pour recup l'id du produit, sa couleur et sa quantité
+          if (productInCart === null){
+             let tabPanier = [[productId, productColor, parseInt(productQuantity)]];
+//conversion valeur en json
+             let tabPanierStr = JSON.stringify(tabPanier) 
+             localStorage.setItem('productInCart', tabPanierStr)
 
+         }
+// si il a des éléments dans le tableau, alors on ajoute les nouveaux avec les anciens dans le panier 
+// et ensuite rediriger l'utilisateur directement vers la page panier une fois qu'il a appuyer sur le btn ?
+    }
+});
+
+//--------------------------------------------------------------------------------------------------
    //Ensuite 2 possibilités :
    //  si le panier est vide alors je rajoute les elements
    // si dans le panier il y a deja des elements alors je rajoute les nouveaux elements aux anciens
