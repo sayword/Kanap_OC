@@ -44,25 +44,6 @@ addToCart.addEventListener("click", () => {
 		alert("Choisissez la quantité compris entre 1 et 100 merci");
 	} else {
 
-		let productInCart = localStorage.getItem('productInCart');
-
-		// je créer un tableau pour recup l'id du produit, sa couleur et sa quantité
-		if (productInCart === null) {
-			let tabPanier = [
-				[productId, productColor, parseInt(productQuantity)]
-			];
-			//conversion valeur en json
-			let tabPanierStr = JSON.stringify(tabPanier)
-			localStorage.setItem('productInCart', tabPanierStr)
-		}
-		// si le panier n'est pas vide, alors on push entre l'ancien et le nouveau pour les melanger 
-		else {
-			let tabPanier = JSON.parse(productInCart);
-			tabPanier.push ([productId, productColor, productQuantity])
-			let tabPanierStr = JSON.stringify(tabPanier) 
-			localStorage.setItem('productInCart', tabPanierStr)
-
-			// et ensuite rediriger l'utilisateur directement vers la page panier une fois qu'il a appuyer sur le btn ?
-	   }
+		add2Cart(productId, productColor, parseInt(productQuantity));
 	}
 });
