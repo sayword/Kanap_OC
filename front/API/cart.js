@@ -6,7 +6,7 @@ function add2Cart(id, color, qty) {
 		// je créer un tableau pour recup l'id du produit, sa couleur et sa quantité
 		if (productInCart === null) {
 			let tabPanier = [
-				[productId, productColor, parseInt(productQuantity)]
+				[id, color, parseInt(qty)]
 			];
 			//conversion valeur en json
 			let tabPanierStr = JSON.stringify(tabPanier)
@@ -15,11 +15,15 @@ function add2Cart(id, color, qty) {
 		// si le panier n'est pas vide, alors on push entre l'ancien et le nouveau pour les melanger 
 		else {
 			let tabPanier = JSON.parse(productInCart);
-			tabPanier.push ([productId, productColor, productQuantity])
+			tabPanier.push ([id, color, qty])
 			let tabPanierStr = JSON.stringify(tabPanier) 
 			localStorage.setItem('productInCart', tabPanierStr)
-			// faire un autre else si l'id et color est deja dans le panier
-			// et ensuite rediriger l'utilisateur directement vers la page panier une fois qu'il a appuyer sur le btn ?
+
+            //   condition si l'id et color sont deja dans le panier 
+            let objIndex = tabPanier.findIndex((item=> tabPanier.id === item.id && tabPanier.color === item.color));
+            if (objIndex !== -1) {
+                tabPanier[objIndex].qty += qty;
+              }
 	   }
 }
 //-------fonction qui calcul la quantité total-----
@@ -72,6 +76,7 @@ function showProduct(data, color, quantity){
                  </article>`;
   
   }
+  
   
 // -------------FORMULAIRE--------------
 // Recuperation des éléments + regex  
