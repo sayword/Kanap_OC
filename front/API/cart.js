@@ -1,83 +1,87 @@
 //------------fonction qui récupere les données du LocalStorage--------------
 
 function add2Cart(id, color, qty) {
-    let productInCart = localStorage.getItem('productInCart');
+  let productInCart = localStorage.getItem('productInCart');
 
-		// je créer un tableau pour recup l'id du produit, sa couleur et sa quantité
-		if (productInCart === null) {
-			let tabPanier = [
-				[id, color, parseInt(qty)]
-			];
-			//conversion valeur en json
-			let tabPanierStr = JSON.stringify(tabPanier)
-			localStorage.setItem('productInCart', tabPanierStr)
-		}
-		// si le panier n'est pas vide, alors on push entre l'ancien et le nouveau pour les melanger 
-		else {
-			let tabPanier = JSON.parse(productInCart);
-			tabPanier.push ([id, color, qty])
-			let tabPanierStr = JSON.stringify(tabPanier) 
-			localStorage.setItem('productInCart', tabPanierStr)
+  // je créer un tableau pour recup l'id du produit, sa couleur et sa quantité
+  if (productInCart === null) {
+    let tabPanier = [
+      [id, color, parseInt(qty)]
+    ];
+    //conversion valeur en json
+    let tabPanierStr = JSON.stringify(tabPanier)
+    localStorage.setItem('productInCart', tabPanierStr)
+  }
+  // si le panier n'est pas vide, alors on push entre l'ancien et le nouveau pour les melanger 
+  else {
+    let tabPanier = JSON.parse(productInCart);
+    tabPanier.push ([id, color, qty])
+    let tabPanierStr = JSON.stringify(tabPanier) 
+    localStorage.setItem('productInCart', tabPanierStr)
 
-            //   condition si l'id et color sont deja dans le panier 
-            let objIndex = tabPanier.findIndex((item=> tabPanier.id === item.id && tabPanier.color === item.color));
+          //   condition si l'id et color sont deja dans le panier 
+
+          let objIndex = tabPanier.findIndex((item=> tabPanier.id === item.id && tabPanier.color === item.color));
             if (objIndex !== -1) {
                 tabPanier[objIndex].qty += qty;
               }
-	   }
+        
+   }
 }
+
+console.log(tabPanierStr);
 //-------fonction qui calcul la quantité total-----
 
 function totalQuantity() {
-    let totalQuantity = document.querySelector("#totalQuantity");
-    let quantityProduct = document.querySelector('.itemQuantity');
-    let totalQuantities = 0;
-    quantityProduct.forEach(quantity =>{
-    totalQuantities += Number(quantity.value);
-    })
+  let totalQuantity = document.querySelector("#totalQuantity");
+  let quantityProduct = document.querySelector('.itemQuantity');
+  let totalQuantities = 0;
+  quantityProduct.forEach(quantity =>{
+  totalQuantities += Number(quantity.value);
+  })
 }
 
 //----------fonction qui calcul le prix total---------
 
 function totalPrice() {
-    let totalPrice = document.querySelector("#totalPrice");
-    let priceItem = document.querySelector(".priceItem")
-    total = 0;
-    priceItem.forEach(price => {
-        total += Number(price.textContent);
-    })
+  let totalPrice = document.querySelector("#totalPrice");
+  let priceItem = document.querySelector(".priceItem")
+  total = 0;
+  priceItem.forEach(price => {
+      total += Number(price.textContent);
+  })
 }
 
 // faire un DOM pour placer dans html
 
 function showProduct(data, color, quantity){
 
-    return `
-           <article class="cart__item" data-id="${data._id}" data-color="${color}">
-                   <div class="cart__item__img">
-                     <img src=${data.imageUrl} alt="${data.altTxt}">
+  return `
+         <article class="cart__item" data-id="${data._id}" data-color="${color}">
+                 <div class="cart__item__img">
+                   <img src=${data.imageUrl} alt="${data.altTxt}">
+                 </div>
+                 <div class="cart__item__content">
+                   <div class="cart__item__content__titlePrice">
+                     <h2>${data.name}</h2>
+                     <p>${color}</p>
+                     <p id="price">${data.price}.00 €</p>
                    </div>
-                   <div class="cart__item__content">
-                     <div class="cart__item__content__titlePrice">
-                       <h2>${data.name}</h2>
-                       <p>${color}</p>
-                       <p id="price">${data.price}.00 €</p>
+                   <div class="cart__item__content__settings">
+                     <div class="cart__item__content__settings__quantity">
+                       <p>Qté : </p>
+                       <input id="qty_${data._id}_${color}" onchange="changeQuantity('${data._id}','${color}')" type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${quantity}>
                      </div>
-                     <div class="cart__item__content__settings">
-                       <div class="cart__item__content__settings__quantity">
-                         <p>Qté : </p>
-                         <input id="qty_${data._id}_${color}" onchange="changeQuantity('${data._id}','${color}')" type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${quantity}>
-                       </div>
-                       <div class="cart__item__content__settings__delete">
-                         <button class="deleteItem" onclick="deleteProduct('${data._id}','${color}')">Supprimer</button>
-                       </div>
+                     <div class="cart__item__content__settings__delete">
+                       <button class="deleteItem" onclick="deleteProduct('${data._id}','${color}')">Supprimer</button>
                      </div>
                    </div>
-                 </article>`;
-  
-  }
-  
-  
+                 </div>
+               </article>`;
+
+}
+
+
 // -------------FORMULAIRE--------------
 // Recuperation des éléments + regex  
 
@@ -106,47 +110,46 @@ let order = document.getElementById('order');
 //Erreur en cas de non respect du regex
 
 firstName.addEventListener('input',(e)=>{
-    e.preventDefault();
-    if (regexName.test(firstName.value)==false) {
-        errorFirstName.innerHTML = "Veuillez saisir votre prénom";
-    }else{
-        errorFirstName.innerHTML = "";
-    }
+  e.preventDefault();
+  if (regexName.test(firstName.value)==false) {
+      errorFirstName.innerHTML = "Veuillez saisir votre prénom";
+  }else{
+      errorFirstName.innerHTML = "";
+  }
 });
 
 lastName.addEventListener('input',(e)=>{
-    e.preventDefault();
-    if (regexName.test(lastName.value)==false) {
-        errorLastName.innerHTML = "Veuillez saisir votre nom";
-    }else{
-        errorLastName.innerHTML = "";
-    }
+  e.preventDefault();
+  if (regexName.test(lastName.value)==false) {
+      errorLastName.innerHTML = "Veuillez saisir votre nom";
+  }else{
+      errorLastName.innerHTML = "";
+  }
 });
 
 address.addEventListener('input',(e)=>{
-    e.preventDefault();
-    if (regexAddress.test(address.value)==false) {
-        errorAddress.innerHTML = "Veuillez saisir une vraie adresse";
-    }else{
-        errorAddress.innerHTML = "";
-    }
+  e.preventDefault();
+  if (regexAddress.test(address.value)==false) {
+      errorAddress.innerHTML = "Veuillez saisir une vraie adresse";
+  }else{
+      errorAddress.innerHTML = "";
+  }
 });
 
 city.addEventListener('input',(e)=>{
-    e.preventDefault();
-    if (regexCity.test(city.value)==false) {
-        errorCity.innerHTML = "Veuillez saisir une vraie ville";
-    }else{
-        errorCity.innerHTML = "";
-    }
+  e.preventDefault();
+  if (regexCity.test(city.value)==false) {
+      errorCity.innerHTML = "Veuillez saisir une vraie ville";
+  }else{
+      errorCity.innerHTML = "";
+  }
 });
 
 email.addEventListener('input',(e)=>{
-    e.preventDefault();
-    if (regexEmail.test(email.value)==false) {
-        errorEmail.innerHTML = "Email incorrect";
-    }else{
-        errorEmail.innerHTML = "";
-    }
+  e.preventDefault();
+  if (regexEmail.test(email.value)==false) {
+      errorEmail.innerHTML = "Email incorrect";
+  }else{
+      errorEmail.innerHTML = "";
+  }
 });
-
