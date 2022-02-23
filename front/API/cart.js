@@ -1,35 +1,43 @@
 //------------fonction qui récupere les données du LocalStorage--------------
 
+
+//------------- FONCTION AJOUT PANIER-----------------------------
 function add2Cart(id, color, qty) {
   let productInCart = localStorage.getItem('productInCart');
 
-  // je créer un tableau pour recup l'id du produit, sa couleur et sa quantité
+  let find = productInCart.find(
+    (data) => data.id === id && data.color === color);
+
+  // si il n'y a rien dans le panier
   if (productInCart === null) {
     let tabPanier = [
       [id, color, parseInt(qty)]
     ];
-    //conversion valeur en json
     let tabPanierStr = JSON.stringify(tabPanier)
     localStorage.setItem('productInCart', tabPanierStr)
   }
-  // si le panier n'est pas vide, alors on push entre l'ancien et le nouveau pour les melanger 
-  else {
-    let tabPanier = JSON.parse(productInCart);
-    tabPanier.push ([id, color, qty])
-    let tabPanierStr = JSON.stringify(tabPanier) 
+  // sinon, si il a trouver le meme produit dans le panier, alors j'ajoute juste la quantité 
+  else if (find) {
+    let tabPanier = [
+      [id, color, parseInt(qty)]
+    ];
+    let newQty =
+    parseInt(tabPanier.qty) + parseInt(find.qty);
+    find.qty = newQty;
+    let tabPanierStr = JSON.stringify(tabPanier)
     localStorage.setItem('productInCart', tabPanierStr)
-
-          //   condition si l'id et color sont deja dans le panier 
-
-          let objIndex = tabPanier.findIndex((item=> tabPanier.id === item.id && tabPanier.color === item.color));
-            if (objIndex !== -1) {
-                tabPanier[objIndex].qty += qty;
-              }
-        
-   }
+  } 
+  // ou sinon tu ajoute l'élément au panier en gardant les éléments qui sont déjà dans le panier
+  else {
+    let tabPanier = [
+      [id, color, parseInt(qty)]
+    ];
+    productInCart.push(tabPanier);
+    let tabPanierStr = JSON.stringify(tabPanier)
+    localStorage.setItem('productInCart', tabPanierStr)
+  }
 }
 
-console.log(tabPanierStr);
 //-------fonction qui calcul la quantité total-----
 
 function totalQuantity() {
@@ -53,32 +61,36 @@ function totalPrice() {
 }
 
 // faire un DOM pour placer dans html
-
-function showProduct(data, color, quantity){
-
+// j'essaye de faire avec la méthode find mais je crois que c'est pas du tout bon
+let produitId = productInCart.find(element => {
+  return element.id
+})
+let produitColor = productInCart.find(element => {
+  return element.color
+})
+function showProduct(produitId, produitColor, quantity){
   return `
-         <article class="cart__item" data-id="${data._id}" data-color="${color}">
+         <article class="cart__item" data-id="${produitId}" data-color="${produitColor}">
                  <div class="cart__item__img">
-                   <img src=${data.imageUrl} alt="${data.altTxt}">
+                   <img src=${.imageUrl} alt="${.altTxt}">
                  </div>
                  <div class="cart__item__content">
                    <div class="cart__item__content__titlePrice">
-                     <h2>${data.name}</h2>
-                     <p>${color}</p>
-                     <p id="price">${data.price}.00 €</p>
+                     <h2>${.name}</h2>
+                     <p>${produitColor}</p>
+                     <p id="price">${.price}.00 €</p>
                    </div>
                    <div class="cart__item__content__settings">
                      <div class="cart__item__content__settings__quantity">
                        <p>Qté : </p>
-                       <input id="qty_${data._id}_${color}" onchange="changeQuantity('${data._id}','${color}')" type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${quantity}>
+                       <input id="qty_${produitId}_${produitColor}" onchange="changeQuantity('${produitId}','${produitColor}')" type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${quantity}>
                      </div>
                      <div class="cart__item__content__settings__delete">
-                       <button class="deleteItem" onclick="deleteProduct('${data._id}','${color}')">Supprimer</button>
+                       <button class="deleteItem" onclick="deleteProduct('${produitId}','${produitColor}')">Supprimer</button>
                      </div>
                    </div>
                  </div>
                </article>`;
-
 }
 
 
