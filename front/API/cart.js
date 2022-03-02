@@ -1,12 +1,12 @@
 //------------fonction qui récupere les données du LocalStorage--------------
 
+//recup avec un fetch les données du produit
 
 //------------- FONCTION AJOUT PANIER-----------------------------
 function add2Cart(id, color, qty) {
   let productInCart = localStorage.getItem('productInCart');
 
-  let find = productInCart.find(
-    (data) => data.id === id && data.color === color);
+
 
   // si il n'y a rien dans le panier
   if (productInCart === null) {
@@ -17,14 +17,16 @@ function add2Cart(id, color, qty) {
     localStorage.setItem('productInCart', tabPanierStr)
   }
   // sinon, si il a trouver le meme produit dans le panier, alors j'ajoute juste la quantité 
-  else if (find) {
+  if (find) {
+    let find = productInCart.find(
+      (data) => data.id === id && data.color === color);
     let tabPanier = [
       [id, color, parseInt(qty)]
     ];
     let newQty =
     parseInt(tabPanier.qty) + parseInt(find.qty);
-    find.qty = newQty;
-    let tabPanierStr = JSON.stringify(tabPanier)
+    newQty = find.qty + tabPanier.qty; //changement de logique sur cette ligne cette fois-ci j'ajoute la qty trouvé + la qty que l'ont ajoute au panier
+    let tabPanierStr = JSON.stringify(newQty) // ici j'ai remplacer le tabpanier par newQty
     localStorage.setItem('productInCart', tabPanierStr)
   } 
   // ou sinon tu ajoute l'élément au panier en gardant les éléments qui sont déjà dans le panier
@@ -61,37 +63,18 @@ function totalPrice() {
 }
 
 // faire un DOM pour placer dans html
-// j'essaye de faire avec la méthode find mais je crois que c'est pas du tout bon
-let produitId = productInCart.find(element => {
-  return element.id
-})
-let produitColor = productInCart.find(element => {
-  return element.color
-})
-function showProduct(produitId, produitColor, quantity){
-  return `
-         <article class="cart__item" data-id="${produitId}" data-color="${produitColor}">
-                 <div class="cart__item__img">
-                   <img src=${.imageUrl} alt="${.altTxt}">
-                 </div>
-                 <div class="cart__item__content">
-                   <div class="cart__item__content__titlePrice">
-                     <h2>${.name}</h2>
-                     <p>${produitColor}</p>
-                     <p id="price">${.price}.00 €</p>
-                   </div>
-                   <div class="cart__item__content__settings">
-                     <div class="cart__item__content__settings__quantity">
-                       <p>Qté : </p>
-                       <input id="qty_${produitId}_${produitColor}" onchange="changeQuantity('${produitId}','${produitColor}')" type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${quantity}>
-                     </div>
-                     <div class="cart__item__content__settings__delete">
-                       <button class="deleteItem" onclick="deleteProduct('${produitId}','${produitColor}')">Supprimer</button>
-                     </div>
-                   </div>
-                 </div>
-               </article>`;
-}
+// j'essaye de faire avec la méthode forEach
+productInCart.forEach(item => {
+        
+  let article = document.createElement("article");
+  article.add("cart__item");
+  article.setAttribute("data-id", item.id)
+  cartArticles.appendChild(article);
+  
+  let cartImg = document.createElement("div");
+  cartImg.add("cart__item__img");
+  article.appendChild(cartImg);
+});
 
 
 // -------------FORMULAIRE--------------
