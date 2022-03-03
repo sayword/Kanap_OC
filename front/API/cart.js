@@ -8,25 +8,25 @@ function add2Cart(id, color, qty) {
 
 
 
-  // si il n'y a rien dans le panier
-  if (productInCart === null) {
-    let tabPanier = [
-      [id, color, parseInt(qty)]
-    ];
-    let tabPanierStr = JSON.stringify(tabPanier)
-    localStorage.setItem('productInCart', tabPanierStr)
-  }
+// si il n'y a rien dans le panier
+if (productInCart === null) {
+  let tabPanier = [
+    [id, color, parseInt(qty), image]
+  ];
+  let tabPanierStr = JSON.stringify(tabPanier)
+  localStorage.setItem('productInCart', tabPanierStr)
+}
+else {
+  //parse ici
+  productInCart = JSON.parse(productInCart);
+  let find = productInCart.find(
+    (data) => data.id === id && data.color === color);
   // sinon, si il a trouver le meme produit dans le panier, alors j'ajoute juste la quantité 
   if (find) {
-    let find = productInCart.find(
-      (data) => data.id === id && data.color === color);
-    let tabPanier = [
-      [id, color, parseInt(qty)]
-    ];
-    let newQty =
-    parseInt(tabPanier.qty) + parseInt(find.qty);
-    newQty = find.qty + tabPanier.qty; //changement de logique sur cette ligne cette fois-ci j'ajoute la qty trouvé + la qty que l'ont ajoute au panier
-    let tabPanierStr = JSON.stringify(newQty) // ici j'ai remplacer le tabpanier par newQty
+    let newQty = parseInt(qty) + parseInt(find.qty);
+    find.qty = newQty;
+    productInCart.push(find);
+    let tabPanierStr = JSON.stringify(productInCart) // ici j'ai remplacer le tabpanier productInCart
     localStorage.setItem('productInCart', tabPanierStr)
   } 
   // ou sinon tu ajoute l'élément au panier en gardant les éléments qui sont déjà dans le panier
@@ -38,6 +38,7 @@ function add2Cart(id, color, qty) {
     let tabPanierStr = JSON.stringify(tabPanier)
     localStorage.setItem('productInCart', tabPanierStr)
   }
+}
 }
 
 //-------fonction qui calcul la quantité total-----
@@ -66,14 +67,25 @@ function totalPrice() {
 // j'essaye de faire avec la méthode forEach
 productInCart.forEach(item => {
         
+  let cartArticles = document.getElementById("cart__items")
+
   let article = document.createElement("article");
-  article.add("cart__item");
-  article.setAttribute("data-id", item.id)
-  cartArticles.appendChild(article);
+      article.classList.add("cart__item");
+      article.setAttribute("data-id", item.id)
+      cartArticles.appendChild(article);
   
   let cartImg = document.createElement("div");
-  cartImg.add("cart__item__img");
-  article.appendChild(cartImg);
+      cartImg.classList.add("cart__item__img");
+      article.appendChild(cartImg);
+
+  let imgItem = document.createElement("img");
+      cartImg.appendChild(imgItem);
+      imgItem.src = item.image;      
+      
+  // calcul qty total + prix total
+  totalPrice()
+  totalQuantity()
+
 });
 
 
