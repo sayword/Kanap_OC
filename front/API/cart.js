@@ -3,43 +3,7 @@
 //recup avec un fetch les données du produit
 
 //------------- FONCTION AJOUT PANIER-----------------------------
-function add2Cart(id, color, qty) {
-  let productInCart = localStorage.getItem('productInCart');
 
-
-
-// si il n'y a rien dans le panier
-if (productInCart === null) {
-  let tabPanier = [
-    [id, color, parseInt(qty), image]
-  ];
-  let tabPanierStr = JSON.stringify(tabPanier)
-  localStorage.setItem('productInCart', tabPanierStr)
-}
-else {
-  //parse ici
-  productInCart = JSON.parse(productInCart);
-  let find = productInCart.find(
-    (data) => data.id === id && data.color === color);
-  // sinon, si il a trouver le meme produit dans le panier, alors j'ajoute juste la quantité 
-  if (find) {
-    let newQty = parseInt(qty) + parseInt(find.qty);
-    find.qty = newQty;
-    productInCart.push(find);
-    let tabPanierStr = JSON.stringify(productInCart) // ici j'ai remplacer le tabpanier productInCart
-    localStorage.setItem('productInCart', tabPanierStr)
-  } 
-  // ou sinon tu ajoute l'élément au panier en gardant les éléments qui sont déjà dans le panier
-  else {
-    let tabPanier = [
-      [id, color, parseInt(qty)]
-    ];
-    productInCart.push(tabPanier);
-    let tabPanierStr = JSON.stringify(tabPanier)
-    localStorage.setItem('productInCart', tabPanierStr)
-  }
-}
-}
 
 //-------fonction qui calcul la quantité total-----
 
