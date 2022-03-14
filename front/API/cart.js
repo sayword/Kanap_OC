@@ -4,7 +4,6 @@
 
 //------------- FONCTION AJOUT PANIER-----------------------------
 
-
 //-------fonction qui calcul la quantité total-----
 
 function totalQuantity() {
@@ -75,7 +74,6 @@ let email = document.getElementById('email');
 let regexEmail=/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 let errorEmail = document.getElementById('emailErrorMsg');
 
-let order = document.getElementById('order');
 
 //--------------------------------
 //Erreur en cas de non respect du regex
@@ -123,4 +121,29 @@ email.addEventListener('input',(e)=>{
   }else{
       errorEmail.innerHTML = "";
   }
+});
+
+//je recup l'id du bouton pour faire un event
+let order = document.getElementById('order');
+order.addEventListener('click',(event)=>{
+  event.preventDefault();
+  let contact = {
+      firstName : firstName.value,
+      lastName : lastName.value,
+      address : address.value,
+      city : city.value,
+      email : email.value,
+  }
+
+
+  // si le client n'a pas bien rempli les champs alors on affiche un message d'erreur
+  if (firstName.value === ""|| lastName.value === ""|| address.value === "" || city.value === "" || email.value === "") {
+      alert("Vous n'avez pas bien rempli le formulaire")
+        // sinon, j'envoi mon tableau     
+  }else{
+      fetch(('http://localhost:3000/api/products/order'),{
+          method: "POST",
+          headers :{'Accept':'application/json','Content-type':'application/json'},
+          body : JSON.stringify(contact)
+      })}
 });
