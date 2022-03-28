@@ -29,8 +29,6 @@ fetch("http://localhost:3000/api/products/" + id)
 			productColors.innerHTML = colors;
 		}
 	});
-//je créer le tableau à envoyer au panier
-let registerItem = [];
 // recup le btn
 const addToCart = document.querySelector("#addToCart");
 // creation d'un evenement au click du btn
@@ -44,53 +42,6 @@ addToCart.addEventListener("click", () => {
 		alert("Choisissez la quantité compris entre 1 et 100 merci");
 	} else {
 		alert("Votre element s'ajoute au panier")
-		function add2Cart(id, color, qty) {
-			let productInCart = localStorage.getItem('productInCart');
-			
-			
-			
-			// si il n'y a rien dans le panier
-			if (productInCart === null) {
-
-			let tabPanier = 
-			  {
-				  'id' : id,
-				  'couleur' : color,
-				  'quantité' : qty
-			  };
-			let tabPanierStr = JSON.stringify(tabPanier)
-			localStorage.setItem('productInCart', tabPanierStr)
-			}
-			else {
-			//parse ici
-
-			productInCart = JSON.parse(productInCart);
-			let find = productInCart.find(
-			  (data) => data.id === id && data.color === color);
-			// sinon, si il a trouver le meme produit dans le panier, alors j'ajoute juste la quantité 
-			if (find) {
-
-			  let newQty = parseInt(qty) + parseInt(find.qty);
-			  find.qty = newQty;
-			  productInCart.push(find);
-			  let tabPanierStr = JSON.stringify(productInCart) // ici j'ai remplacer le tabpanier productInCart
-			  localStorage.setItem('productInCart', tabPanierStr)
-			} 
-			// ou sinon tu ajoute l'élément au panier en gardant les éléments qui sont déjà dans le panier
-			else {
-
-				let tabPanier = 
-				{
-					'id' : id,
-					'couleur' : color,
-					'quantité' : qty
-				};
-			  productInCart.push(tabPanier);
-			  let tabPanierStr = JSON.stringify(productInCart)
-			  localStorage.setItem('productInCart', tabPanierStr)
-			}
-			}
-			}
 		add2Cart(id, color, qty)
 	}
 });
