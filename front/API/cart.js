@@ -70,50 +70,55 @@ function totalPrice() {
       total += Number(price.textContent);
   })
 }
-
+function formulaire() {
 // faire un DOM pour placer dans html
 // j'essaye de faire avec la méthode for
-let productCart = JSON.parse(localStorage.getItem("productInCart"));
-if (productCart =! null) {
-  let articles = document.getElementById("cart__items")
-  let aValue = localStorage.getItem('productInCart');
-  for (i = 0; i < aValue.length; i++) {
-    console.log(aValue)
-    let tab = aValue[i];
-    fetch("http://localhost:3000/api/products/" + aValue[i].id)
-      .then((res) => res.json())
-      .then((data) => {
-          let div = document.createElement('div');
-          div.innerHTML = `
-          <article class="cart__item" data-id="${tab._id}" data-color="${tab.couleur}">
-                  <div class="cart__item__img">
-                    <img src=${data.imageUrl} alt="${data.altTxt}">
-                  </div>
-                  <div class="cart__item__content">
-                    <div class="cart__item__content__titlePrice">
-                      <h2>${data.name}</h2>
-                      <p>${tab.couleur}</p>
-                      <p id="price">${data.price}.00 €</p>
-                    </div>
-                    <div class="cart__item__content__settings">
-                      <div class="cart__item__content__settings__quantity">
-                        <p>Qté : </p>
-                        <input id="qty_${data._id}_${tab.couleur}" onchange="changeQuantity('${data._id}','${tab.couleur}')" type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${tab.quantité}>
-                      </div>
-                      <div class="cart__item__content__settings__delete">
-                        <button class="deleteItem" onclick="deleteProduct('${data._id}','${tab.couleur}')">Supprimer</button>
-                      </div>
-                    </div>
-                  </div>
-                </article>`
-          articles.appendChild(div)
-      })
+  let productCart = JSON.parse(localStorage.getItem("productInCart"));
+
+  if (productCart === null) {
+  
   }
-}
+  else{
+    let articles = document.getElementById("cart__items")
+    let aValue = localStorage.getItem('productInCart');
+    console.log(aValue)
+    for ( i = 0; i < aValue.length; i++) {
+      console.log(aValue)
+      let tab = aValue[i];
+      fetch("http://localhost:3000/api/products/" + aValue[i].id)
+        .then((res) => res.json())
+        .then((data) => {
+            let div = document.createElement('div');
+            div.innerHTML = `
+            <article class="cart__item" data-id="${tab._id}" data-color="${tab.couleur}">
+                    <div class="cart__item__img">
+                      <img src=${data.imageUrl} alt="${data.altTxt}">
+                    </div>
+                    <div class="cart__item__content">
+                      <div class="cart__item__content__titlePrice">
+                        <h2>${data.name}</h2>
+                        <p>${tab.couleur}</p>
+                        <p id="price">${data.price}.00 €</p>
+                      </div>
+                      <div class="cart__item__content__settings">
+                        <div class="cart__item__content__settings__quantity">
+                          <p>Qté : </p>
+                          <input id="qty_${data._id}_${tab.couleur}" onchange="changeQuantity('${data._id}','${tab.couleur}')" type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${tab.quantité}>
+                        </div>
+                        <div class="cart__item__content__settings__delete">
+                          <button class="deleteItem" onclick="deleteProduct('${data._id}','${tab.couleur}')">Supprimer</button>
+                        </div>
+                      </div>
+                    </div>
+                  </article>`
+            articles.appendChild(div)
+        })
+    }
+  }
 
 // -------------FORMULAIRE--------------
 // Recuperation des éléments + regex  
-function formulaire() {
+
 
   let firstName = document.getElementById('firstName');
   let regexName = /^[a-z ,.'-]+$/i;
