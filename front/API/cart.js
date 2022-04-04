@@ -1,10 +1,8 @@
 //------------fonction qui récupere les données du LocalStorage--------------
 
-
 //------------- FONCTION AJOUT PANIER-----------------------------
 function add2Cart(id, color, qty) {
   let productInCart = localStorage.getItem('productInCart');
-  
   
   // si il n'y a rien dans le panier
   if (productInCart === null) {
@@ -22,12 +20,17 @@ function add2Cart(id, color, qty) {
   //parse ici
 
   
-  pp = [productInCart];
-  let find = pp.find(
+  const entries = Object.entries(productInCart); //
+  console.log(entries)
+  for(i=0;i<entries.length;i++)
+{
+  console.log(entries[i]);
+}
+  let find = pp.find( //
     (data) => data.id === id && data.color === color);
   
   // sinon, si il a trouver le meme produit dans le panier, alors j'ajoute juste la quantité 
-  if (find) {
+  if (find) { //
 
     let newQty = parseInt(qty) + parseInt(find.qty);
     find.qty = newQty;
