@@ -1,9 +1,13 @@
-//------------fonction qui récupere les données du LocalStorage--------------
+//------------fonction qui récupere les données du LocalStorage-----------
+let productInCart = localStorage.getItem('productInCart');
 
+Object.entries(productInCart).forEach(entry => {
+  const [key, value] = entry;
+  console.log(key, value);
+});
 //------------- FONCTION AJOUT PANIER-----------------------------
 function add2Cart(id, color, qty) {
-  let productInCart = localStorage.getItem('productInCart');
-  
+
   // si il n'y a rien dans le panier
   if (productInCart === null) {
 
@@ -18,15 +22,9 @@ function add2Cart(id, color, qty) {
   }
   else {
   //parse ici
-
-  
-  const entries = Object.entries(productInCart); //
-  console.log(entries)
-  for(i=0;i<entries.length;i++)
-{
-  console.log(entries[i]);
-}
-  let find = pp.find( //
+  console.log(productInCart)
+  //
+  let find = productInCart.find( //
     (data) => data.id === id && data.color === color);
   
   // sinon, si il a trouver le meme produit dans le panier, alors j'ajoute juste la quantité 
@@ -34,8 +32,8 @@ function add2Cart(id, color, qty) {
 
     let newQty = parseInt(qty) + parseInt(find.qty);
     find.qty = newQty;
-    pp.push(find);
-    let tabPanierStr = JSON.stringify(pp) // ici j'ai remplacer le tabpanier productInCart
+    productInCart.push(find);
+    let tabPanierStr = JSON.stringify(productInCart) // ici j'ai remplacer le tabpanier productInCart
     localStorage.setItem('productInCart', tabPanierStr)
   } 
   // ou sinon tu ajoute l'élément au panier en gardant les éléments qui sont déjà dans le panier
@@ -47,14 +45,13 @@ function add2Cart(id, color, qty) {
       'couleur' : color,
       'quantité' : qty
     };
-    pp.push(tabPanier);
-    let tabPanierStr = JSON.stringify(pp)
+    entries.push(tabPanier);
+    let tabPanierStr = JSON.stringify(productInCart)
     localStorage.setItem('productInCart', tabPanierStr)
   }
   }
   }
 //-------fonction qui calcul la quantité total-----
-
 function totalQuantity() {
   let totalQuantity = document.querySelector("#totalQuantity");
   let quantityProduct = document.querySelector('.itemQuantity');
