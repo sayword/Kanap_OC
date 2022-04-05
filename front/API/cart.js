@@ -1,10 +1,5 @@
 //------------fonction qui récupere les données du LocalStorage-----------
 let productInCart = localStorage.getItem('productInCart');
-
-Object.entries(productInCart).forEach(entry => {
-  const [key, value] = entry;
-  console.log(key, value);
-});
 //------------- FONCTION AJOUT PANIER-----------------------------
 function add2Cart(id, color, qty) {
 
@@ -22,20 +17,22 @@ function add2Cart(id, color, qty) {
   }
   else {
   //parse ici
-  console.log(productInCart)
+  let produitLocalStorage = JSON.parse(localStorage.getItem("productInCart"));
+  console.log(produitLocalStorage)
   //
-  let find = productInCart.find( //
-    (data) => data.id === id && data.color === color);
-  
+  let p = [produitLocalStorage]
+  const resFind = p.find(
+    (el) => el.id === id && el.couleur === color);
   // sinon, si il a trouver le meme produit dans le panier, alors j'ajoute juste la quantité 
-  if (find) { //
-
-    let newQty = parseInt(qty) + parseInt(find.qty);
-    find.qty = newQty;
-    productInCart.push(find);
-    let tabPanierStr = JSON.stringify(productInCart) // ici j'ai remplacer le tabpanier productInCart
+  if (resFind) { //
+    alert("aaa")
+    let newQty = parseInt(qty) + parseInt(resFind.quantité);
+    resFind.quantité = newQty;
+    p.push(newQty);
+    let tabPanierStr = JSON.stringify(produitLocalStorage) // ici j'ai remplacer le tabpanier productInCart
     localStorage.setItem('productInCart', tabPanierStr)
   } 
+
   // ou sinon tu ajoute l'élément au panier en gardant les éléments qui sont déjà dans le panier
   else {
 
@@ -45,8 +42,8 @@ function add2Cart(id, color, qty) {
       'couleur' : color,
       'quantité' : qty
     };
-    entries.push(tabPanier);
-    let tabPanierStr = JSON.stringify(productInCart)
+    p.push(tabPanier);
+    let tabPanierStr = JSON.stringify(p)
     localStorage.setItem('productInCart', tabPanierStr)
   }
   }
@@ -81,11 +78,9 @@ function formulaire() {
   else{
     let articles = document.getElementById("cart__items")
     let aValue = localStorage.getItem('productInCart');
-    console.log(aValue)
     for ( i = 0; i < aValue.length; i++) {
-      console.log(aValue)
       let tab = aValue[i];
-      fetch("http://localhost:3000/api/products/" + aValue[i].id)
+      fetch("http://localhost:3000/api/products/" + tab.id)
         .then((res) => res.json())
         .then((data) => {
             let div = document.createElement('div');
