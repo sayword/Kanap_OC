@@ -83,16 +83,26 @@ function formulaire() {
   
   }
   else{
+    let produitLocalStorage = JSON.parse(localStorage.getItem("productInCart"));
+    console.log(produitLocalStorage)
+    //
+    let p = []
+    p.push(produitLocalStorage)
+
+
     let articles = document.getElementById("cart__items")
     let aValue = localStorage.getItem('productInCart');
-    for ( i = 0; i < aValue.length; i++) {
-      let tab = aValue[i];
-      fetch("http://localhost:3000/api/products/" + tab.id)
+    for ( i = 0; i < p.length; i++) {
+      p[0].forEach(object =>{
+        console.log(object.id);
+
+      let tab = p[0];
+      fetch("http://localhost:3000/api/products/" + object.id)
         .then((res) => res.json())
         .then((data) => {
             let div = document.createElement('div');
             div.innerHTML = `
-            <article class="cart__item" data-id="${tab._id}" data-color="${tab.couleur}">
+            <article class="cart__item" data-id="${object.id}" data-color="${object.couleur}">
                     <div class="cart__item__img">
                       <img src=${data.imageUrl} alt="${data.altTxt}">
                     </div>
@@ -115,7 +125,7 @@ function formulaire() {
                   </article>`
             articles.appendChild(div)
         })
-    }
+      });}
   }
 
 // -------------FORMULAIRE--------------
