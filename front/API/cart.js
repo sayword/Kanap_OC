@@ -5,7 +5,6 @@ function add2Cart(id, color, qty) {
   let productInCart = localStorage.getItem('productInCart');
   // si il n'y a rien dans le panier
   if (productInCart === null) {
-    alert("si il n'y a rien dans le panier")
   let tabPanier = 
     {
       'id' : id,
@@ -21,16 +20,14 @@ function add2Cart(id, color, qty) {
   else {
   //parse ici
   let produitLocalStorage = JSON.parse(localStorage.getItem("productInCart"));
-  console.log(produitLocalStorage)
   //
   let p = []
   p.push(produitLocalStorage)
-  console.log(p)
+
   const resFind = p[0].find(
     (el) => el.id === id && el.couleur === color);
   // sinon, si il a trouver le meme produit dans le panier, alors j'ajoute juste la quantité 
   if (resFind) { //
-    alert("si il a trouver le meme produit dans le panier, alors j'ajoute juste la quantité  ")
     let newQty = parseInt(qty) + parseInt(resFind.quantité);
     resFind.quantité = newQty;
     p.push(newQty);
@@ -40,7 +37,7 @@ function add2Cart(id, color, qty) {
 
   // ou sinon tu ajoute l'élément au panier en gardant les éléments qui sont déjà dans le panier
   else {
-alert('ou sinon tu ajoute lélément au panier en gardant les éléments qui sont déjà dans le panier')
+
     let tabPanier = 
     {
       'id' : id,
@@ -83,18 +80,15 @@ function formulaire() {
   
   }
   else{
-    let produitLocalStorage = JSON.parse(localStorage.getItem("productInCart"));
-    console.log(produitLocalStorage)
     //
     let p = []
-    p.push(produitLocalStorage)
+    p.push(productCart)
 
 
     let articles = document.getElementById("cart__items")
     let aValue = localStorage.getItem('productInCart');
     for ( i = 0; i < p.length; i++) {
       p[0].forEach(object =>{
-        console.log(object.id);
 
       let tab = p[0];
       fetch("http://localhost:3000/api/products/" + object.id)
