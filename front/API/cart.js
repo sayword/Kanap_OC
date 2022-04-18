@@ -1,5 +1,6 @@
 //------------fonction qui récupere les données du LocalStorage-----------
-
+let produitLocalStorage = JSON.parse(localStorage.getItem("productInCart"));
+console.log(produitLocalStorage)
 //------------- FONCTION AJOUT PANIER-----------------------------
 function add2Cart(id, color, qty) {
   let productInCart = localStorage.getItem('productInCart');
@@ -65,12 +66,13 @@ function totalQuantity() {
 //----------fonction qui calcul le prix total---------
 function totalPrice() {
   let totalPrice = document.querySelector("#totalPrice");
-  let priceItem = document.querySelector(".priceItem")
+  let priceItem = document.querySelector("#price")
   total = 0;
   priceItem.forEach(price => {
       total += Number(price.textContent);
   })
 }
+
 function formulaire() {
 // faire un DOM pour placer dans html
 // j'essaye de faire avec la méthode for
@@ -80,16 +82,15 @@ function formulaire() {
   
   }
   else{
-    //
+    //      let tab = p[0];
+    let prixTotal = 0
     let p = []
+    let r = 0
     p.push(productCart)
-
-
     let articles = document.getElementById("cart__items")
     let aValue = localStorage.getItem('productInCart');
     for ( i = 0; i < p.length; i++) {
       p[0].forEach(object =>{
-
       let tab = p[0];
       fetch("http://localhost:3000/api/products/" + object.id)
         .then((res) => res.json())
@@ -103,24 +104,47 @@ function formulaire() {
                     <div class="cart__item__content">
                       <div class="cart__item__content__titlePrice">
                         <h2>${data.name}</h2>
-                        <p>${tab.couleur}</p>
-                        <p id="price">${data.price}.00 €</p>
+                        <p>${object.couleur}</p>
+                        <p id="price">${data.price} €</p>
                       </div>
                       <div class="cart__item__content__settings">
                         <div class="cart__item__content__settings__quantity">
-                          <p>Qté : </p>
-                          <input id="qty_${data._id}_${tab.couleur}" onchange="changeQuantity('${data._id}','${tab.couleur}')" type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${tab.quantité}>
+                          <p>Qté : ${object.quantité} </p>
+                          <input id="qty_${data._id}_${object.couleur}" onchange="changeQuantity('${data._id}','${object.couleur}')" type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${tab.quantité}>
                         </div>
                         <div class="cart__item__content__settings__delete">
-                          <button class="deleteItem" onclick="deleteProduct('${data._id}','${tab.couleur}')">Supprimer</button>
+                          <button id="deleteItem" ">Supprimer</button>
                         </div>
                       </div>
                     </div>
                   </article>`
             articles.appendChild(div)
+            let ele = document.getElementById('totalPrice');
+            prixTotal =  (data.price * object.quantité) + prixTotal
+            console.log(prixTotal)
+            console.log(ele)
+            document.querySelector("#totalPrice").innerHTML = prixTotal;
         })
-      });}
+      })
+    }
+
   }
+
+// expected output: "012345678"
+if (productCart != null){
+
+    let qt = 0
+    let length = produitLocalStorage.length
+    for (var i = 0; i < length; i++) { 
+
+      qt = parseInt(produitLocalStorage[i].quantité) + qt
+      az = parseInt(produitLocalStorage[i].quantité)
+      //le total quantité tout les produits
+    }
+    let elem = document.getElementById('totalQuantity');
+    elem.append(qt)
+
+}
 
 // -------------FORMULAIRE--------------
 // Recuperation des éléments + regex  
@@ -194,38 +218,32 @@ function formulaire() {
     }
   });
 
-  // // // // let order = document.getElementById('order');
-
-  // // // // let panier = {};
-  // // // // productInCart.forEach(e => {
-  // // // // panier.push(e.id)});
-
-
-  // // // // //je recup l'id du bouton pour faire un event
-  // // // // order.addEventListener('click',(event)=>{
-  // // // //   event.preventDefault();
-  // // // //   let contact = {
-  // // // //       firstName : firstName.value,
-  // // // //       lastName : lastName.value,
-  // // // //       address : address.value,
-  // // // //       city : city.value,
-  // // // //       email : email.value,
-  // // // //   }
-  // // // //   let data = {panier,contact};
-
-  // // // //   // si le client n'a pas bien rempli les champs alors on affiche un message d'erreur
-  // // // //   if (firstName.value === ""|| lastName.value === ""|| address.value === "" || city.value === "" || email.value === "") {
-  // // // //       alert("Vous n'avez pas bien rempli le formulaire")
-  // // // //         // sinon, j'envoi mon tableau     
-  // // // //   }else{
-  // // // //       fetch(('http://localhost:3000/api/products/order'),{
-  // // // //           method: "POST",
-  // // // //           headers :{'Accept':'application/json','Content-type':'application/json'},
-  // // // //           body : JSON.stringify(data)
-  // // // //       })
-  // // // //       .then(res =>{
-  // // // //         return res.json();
-  // // // //     })
-  // // // //     }
-  // // // // });
+ let order = document.getElementById('order');
+ 
+ //je recup l'id du bouton pour faire un event
+ order.addEventListener('click',(event)=>{
+   event.preventDefault();
+   let contact = {
+       firstName : firstName.value,
+       lastName : lastName.value,
+       address : address.value,
+       city : city.value,
+       email : email.value,
+   }
+   let data = {contact};
+   // si le client n'a pas bien rempli les champs alors on affiche un message d'erreur
+   if (firstName.value === ""|| lastName.value === ""|| address.value === "" || city.value === "" || email.value === "") {
+       alert("Vous n'avez pas bien rempli le formulaire")
+         // sinon, j'envoi mon tableau     
+   }else{
+       fetch(('http://localhost:3000/api/products/order'),{
+           method: "POST",
+           headers :{'Accept':'application/json','Content-type':'application/json'},
+           body : JSON.stringify(data)
+       })
+       .then(res =>{
+         return res.json();
+     })
+     }
+ });
 }
