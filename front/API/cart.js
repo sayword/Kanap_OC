@@ -1,6 +1,5 @@
 //------------fonction qui récupere les données du LocalStorage-----------
 let produitLocalStorage = JSON.parse(localStorage.getItem("productInCart"));
-console.log(produitLocalStorage)
 //------------- FONCTION AJOUT PANIER-----------------------------
 function add2Cart(id, color, qty) {
   let productInCart = localStorage.getItem('productInCart');
@@ -85,7 +84,7 @@ function formulaire() {
     //      let tab = p[0];
     let prixTotal = 0
     let p = []
-    let r = 0
+    let r = -1
     p.push(productCart)
     let articles = document.getElementById("cart__items")
     let aValue = localStorage.getItem('productInCart');
@@ -113,7 +112,7 @@ function formulaire() {
                           <input id="qty_${data._id}_${object.couleur}" onchange="changeQuantity('${data._id}','${object.couleur}')" type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${tab.quantité}>
                         </div>
                         <div class="cart__item__content__settings__delete">
-                          <button id="deleteItem" ">Supprimer</button>
+                          <button class="deleteItem"  id="${data._id}" ">Supprimer</button>
                         </div>
                       </div>
                     </div>
@@ -121,14 +120,48 @@ function formulaire() {
             articles.appendChild(div)
             let ele = document.getElementById('totalPrice');
             prixTotal =  (data.price * object.quantité) + prixTotal
-            console.log(prixTotal)
-            console.log(ele)
             document.querySelector("#totalPrice").innerHTML = prixTotal;
+            r = r + 1
+
+
+
+            function deleteProduct() {
+
+              let boutonSupr = document.querySelectorAll(".deleteItem");
+              console.log(boutonSupr)
+                  console.log(r)
+                  boutonSupr[r].addEventListener("click" , (event) => {
+                      event.preventDefault();
+                      let elemDelete = object.id;
+                      console.log(elemDelete)
+                      produitLocalStorage = produitLocalStorage.filter( elem => elem.id !== elemDelete);
+                      localStorage.setItem("productInCart", JSON.stringify(produitLocalStorage));
+                      alert("Ce produit a bien été supprimé du panier");
+                      location.reload()
+                  })              
+          }
+          
+          
+          deleteProduct();
+
+          
+
+          
+
+
+            
         })
       })
     }
-
   }
+
+
+
+
+
+
+
+
 
 // expected output: "012345678"
 if (productCart != null){
@@ -223,27 +256,31 @@ if (productCart != null){
  //je recup l'id du bouton pour faire un event
  order.addEventListener('click',(event)=>{
    event.preventDefault();
-   let contact = {
-       firstName : firstName.value,
-       lastName : lastName.value,
-       address : address.value,
-       city : city.value,
-       email : email.value,
-   }
-   let data = {contact};
    // si le client n'a pas bien rempli les champs alors on affiche un message d'erreur
    if (firstName.value === ""|| lastName.value === ""|| address.value === "" || city.value === "" || email.value === "") {
        alert("Vous n'avez pas bien rempli le formulaire")
          // sinon, j'envoi mon tableau     
    }else{
-       fetch(('http://localhost:3000/api/products/order'),{
-           method: "POST",
-           headers :{'Accept':'application/json','Content-type':'application/json'},
-           body : JSON.stringify(data)
-       })
-       .then(res =>{
-         return res.json();
-     })
-     }
+    let contact = {
+      firstName : firstName.value,
+      lastName : lastName.value,
+      address : address.value,
+      city : city.value,
+      email : email.value,
+  };
+  let data = contact;
+  fetch(('http://localhost:3000/api/products/order'),{
+    method: "POST",
+    headers :{'Accept':'application/json','Content-type':'application/json'
+    },
+    body : JSON.stringify(data)
+})
+.then(res =>{
+    return res.json();
+})
+.then((data)=>{
+//window.location.href =`confirmation.html?orderId=${data.orderId}`;
+})  
+}
  });
 }
