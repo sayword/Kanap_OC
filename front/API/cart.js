@@ -252,14 +252,14 @@ function formulaire() {
             email: email.value,
           };
           console.log(productCart)
-          let produit = [];
+          let products = [];
           produitLocalStorage.forEach((order) => {
-            produit.push(order.id);
+            products.push(order.id);
           });
-          console.log(produit)
+          console.log(products)
           let data = {
             contact,
-            produit
+            products
           };
           fetch(('http://localhost:3000/api/products/order'), {
             method: "POST",
