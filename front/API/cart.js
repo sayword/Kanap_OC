@@ -1,32 +1,30 @@
 //------------récupere les données du LocalStorage-----------
-
 let produitLocalStorage = JSON.parse(localStorage.getItem("productInCart"));
-
-//------------- FONCTION AJOUT PANIER-----------------------------
+//------------FONCTION AJOUT PANIER--------------------------
 
 function add2Cart(id, color, qty) {
   let productInCart = localStorage.getItem('productInCart');
-  // si il n'y a rien dans le panier
+  // si il n'y a rien dans le panier, je créer un nouveau tableau d'objet
   if (productInCart === null) {
     let tabPanier = {
       'id': id,
       'couleur': color,
       'quantite': qty
     };
-    let u = [tabPanier]
-    let tabPanierStr = JSON.stringify(u)
+    let tabPanier2 = [tabPanier]
+    let tabPanierStr = JSON.stringify(tabPanier2)
     localStorage.setItem('productInCart', tabPanierStr)
   }
   else {
     let produitLocalStorage = JSON.parse(localStorage.getItem("productInCart"));
-    let p = []
-    p.push(produitLocalStorage)
-    const resFind = p[0].find((el) => el.id === id && el.couleur === color);
+    let tableauProduit = []
+    tableauProduit.push(produitLocalStorage)
+    const resFind = tableauProduit[0].find((el) => el.id === id && el.couleur === color);
     // sinon, si il a trouver le meme produit dans le panier, alors j'ajoute juste la quantité 
     if (resFind) {
       let newQty = parseInt(qty) + parseInt(resFind.quantite);
       resFind.quantite = newQty;
-      p.push(newQty);
+      tableauProduit.push(newQty);
       let tabPanierStr = JSON.stringify(produitLocalStorage)
       localStorage.setItem('productInCart', tabPanierStr)
     }
@@ -43,17 +41,17 @@ function add2Cart(id, color, qty) {
     }
   }
 }
-
+//Fonction formulaire() que j'appelle juste dans le cart.html
 function formulaire() {
   let productCart = JSON.parse(localStorage.getItem("productInCart"));
-  let gogo = 0
+  let boucle1 = 0
   let prixTotal = 0
-  let p = []
-  let r = -1
-  p.push(productCart)
+  let tableauProduit = []
+  let boucle2 = -1
+  tableauProduit.push(productCart)
   let articles = document.getElementById("cart__items")
-  for (i = 0; i < p.length; i++) {
-    p[0].forEach(object => {
+  for (i = 0; i < tableauProduit.length; i++) {
+    tableauProduit[0].forEach(object => {
       fetch("http://localhost:3000/api/products/" + object.id)
         .then((res) => res.json())
         .then((data) => {
@@ -71,11 +69,11 @@ function formulaire() {
                       </div>
                       <div class="cart__item__content__settings">
                         <div class="cart__item__content__settings__quantity">
-                          <p>Qté : ${object.quantite} </p>
+                          <p>Quantité :  </p>
                           <input id="qty_${data._id}_${object.couleur}" onchange="changeQuantity('${data._id}','${object.couleur}')" type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${object.quantite}>
                         </div>
                         <div class="cart__item__content__settings__delete">
-                          <button class="deleteItem"  id="${data._id}" ">Supprimer</button>
+                          <button class="deleteItem"">Supprimer</button>
                         </div>
                       </div>
                     </div>
@@ -84,17 +82,14 @@ function formulaire() {
           articles.appendChild(div)
           prixTotal = (data.price * object.quantite) + prixTotal
           document.querySelector("#totalPrice").innerHTML = prixTotal;
-          r = r + 1
+          boucle2 = boucle2 + 1
 
           function deleteProduct() {
             let boutonSupr = document.querySelectorAll(".deleteItem");
-            console.log(boutonSupr)
-            console.log(r)
-            boutonSupr[r].addEventListener("click", (event) => {
+            boutonSupr[boucle2].addEventListener("click", (event) => {
               event.preventDefault();
               let elDelete = object.id;
               let elColor = object.couleur;
-              console.log(elDelete)
               produitLocalStorage = produitLocalStorage.filter(elem => elem.id !== elDelete || elem.couleur !== elColor);
               localStorage.setItem("productInCart", JSON.stringify(produitLocalStorage));
               alert("Ce produit a bien été supprimé du panier");
@@ -103,34 +98,27 @@ function formulaire() {
           }
 
           deleteProduct();
-          console.log(p[0])
-          let ra = object.id
-          let ro = object.couleur
-          console.log(ra)
-          console.log(ro)
+          let objectId = object.id
+          let objectCouleur = object.couleur
 
           function changeQuantity() {
             const choixQuantite = document.querySelectorAll(".itemQuantity");
-            console.log(choixQuantite)
             choixQuantite.forEach((choixQuantite) => {
               choixQuantite.addEventListener("change", (event) => {
 
-                if (gogo === 1) {
-                  console.log(gogo)
+                if (boucle1 === 1) {
                   location.reload();
                   return;
                 }
 
                 event.preventDefault();
                 const value = event.target.value;
-                console.log(value)
-                const resFind = p[0].find((el) => el.id === ra && el.couleur === ro);
+                const resFind = tableauProduit[0].find((el) => el.id === objectId && el.couleur === objectCouleur);
 
                 if (resFind) {
-                  gogo = gogo + 1
+                  boucle1 = boucle1 + 1
                   resFind.quantite = value
-                  console.log(resFind)
-                  let produitString = JSON.stringify(p[0]);
+                  let produitString = JSON.stringify(tableauProduit[0]);
                   localStorage.setItem("productInCart", produitString);
                   //location.reload()
                 }
@@ -142,27 +130,16 @@ function formulaire() {
         })
     })
   }
-
+  
+  //le total de la quantité de tout les produits
   if (productCart != null) {
-    let qt = 0
+    let totalQuantity = 0
     let length = produitLocalStorage.length
     for (var i = 0; i < length; i++) {
-      qt = parseInt(produitLocalStorage[i].quantite) + qt
-      az = parseInt(produitLocalStorage[i].quantite)
-      //le total quantité tout les produits
+      totalQuantity = parseInt(produitLocalStorage[i].quantite) + totalQuantity
     }
     let elem = document.getElementById('totalQuantity');
-    elem.append(qt)
-  }
-
-
-  let str = -1;
-  op = []
-
-  for (let i = 0; i < produitLocalStorage.length; i++) {
-    str = str + 1;
-    console.log(op);
-    op.push(produitLocalStorage[str])
+    elem.append(totalQuantity)
   }
 
   // -------------FORMULAIRE--------------
@@ -191,56 +168,77 @@ function formulaire() {
 
     firstName.addEventListener('input', (e) => {
         e.preventDefault();
-        if (regexName.test(firstName.value) == false) {
-            errorFirstName.innerHTML = "Veuillez saisir votre prénom";
+        if (regexName.test(firstName.value) == false || firstName.value == "") {
+            errorFirstName.innerHTML = "nn mais oh";
+            return false;
         } else {
             errorFirstName.innerHTML = "";
+            return true;
         }
     });
 
     lastName.addEventListener('input', (e) => {
         e.preventDefault();
-        if (regexName.test(lastName.value) == false) {
+        if (regexName.test(lastName.value) == false || lastName.value == "") {
             errorLastName.innerHTML = "Veuillez saisir votre nom";
+            return false;
         } else {
             errorLastName.innerHTML = "";
+            return true;
         }
     });
 
     address.addEventListener('input', (e) => {
         e.preventDefault();
-        if (regexAddress.test(address.value) == false) {
+        if (regexAddress.test(address.value) == false || address.value == "") {
             errorAddress.innerHTML = "Veuillez saisir une vraie adresse";
+            return false;
         } else {
             errorAddress.innerHTML = "";
+            return true;
         }
     });
 
     city.addEventListener('input', (e) => {
         e.preventDefault();
-        if (regexCity.test(city.value) == false) {
+        if (regexCity.test(city.value) == false || city.value == "") {
             errorCity.innerHTML = "Veuillez saisir une vraie ville";
+            return false;
         } else {
             errorCity.innerHTML = "";
+            return true;
         }
     });
 
     email.addEventListener('input', (e) => {
         e.preventDefault();
-        if (regexEmail.test(email.value) == false) {
+        if (regexEmail.test(email.value) == false || email.value == "") {
             errorEmail.innerHTML = "Email incorrect";
+            return false;
         } else {
             errorEmail.innerHTML = "";
+            return true;
         }
     });
 
+
+  
   let order = document.getElementById('order');
   //je recup l'id du bouton pour faire un event
 
   order.addEventListener('click', (event) => {
     event.preventDefault();
     // si le client n'a pas bien rempli les champs alors on affiche un message d'erreur
-    if (firstName.value === "" || lastName.value === "" || address.value === "" || city.value === "" || email.value === "") {
+    if (firstName.value === "" ||
+        lastName.value === "" ||
+        address.value === "" ||
+        city.value === "" ||
+        email.value === "" ||
+        regexName.test(firstName.value) == false ||
+        regexName.test(lastName.value) == false ||
+        regexAddress.test(address.value) == false ||
+        regexCity.test(city.value) == false ||
+        regexEmail.test(email.value) == false) {
       alert("Vous n'avez pas bien rempli le formulaire")
       // sinon, j'envoi mon tableau     
         } else {
@@ -251,12 +249,10 @@ function formulaire() {
             city: city.value,
             email: email.value,
           };
-          console.log(productCart)
           let products = [];
           produitLocalStorage.forEach((order) => {
             products.push(order.id);
           });
-          console.log(products)
           let data = {
             contact,
             products
