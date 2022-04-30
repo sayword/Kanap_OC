@@ -1,18 +1,19 @@
+//Je recupere l'API via un fetch
 fetch("http://localhost:3000/api/products/")
 .then(reponse => reponse.json())
 .then(data => {
+  //tant qu'il y a des produits à afficher de l'API, tu boucle 
     for(product of data) {
-        console.log(product)
-        let div = document.createElement('div');
-        div.innerHTML =
-        `<a href="./product.html?id=${ product._id }">
+        let a = document.createElement('a');
+        document.querySelector("#items").appendChild(a);
+        a.setAttribute("href",`./product.html?id=${product._id}`)
+        a.innerHTML =
+        `
             <article>
-              <img src="${ product.imageUrl }" alt="${ product.atlTxt}">
-              <h4 class="name">${ product.name }</h4>
-              <p class="description">${ product.description }</p>
-              <h3 class="productPrice">${product.price} €</h3>
-            </article>
-          </a>`
-        items.appendChild(div)
+              <img src="${product.imageUrl}" alt="${product.atlTxt}">
+              <h3 class="productName">${product.name}</h3>
+              <p class="productDescription">${product.description}</p>
+            </article>`
+        items.appendChild(a)
     }
 })
