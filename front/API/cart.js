@@ -169,7 +169,7 @@ function formulaire() {
     firstName.addEventListener('input', (e) => {
         e.preventDefault();
         if (regexName.test(firstName.value) == false || firstName.value == "") {
-            errorFirstName.innerHTML = "nn mais oh";
+            errorFirstName.innerHTML = "Veuillez saisir votre prenom";
             return false;
         } else {
             errorFirstName.innerHTML = "";
