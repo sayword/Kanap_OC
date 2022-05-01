@@ -73,7 +73,7 @@ function formulaire() {
                           <input id="qty_${data._id}_${object.couleur}" onchange="changeQuantity('${data._id}','${object.couleur}')" type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${object.quantite}>
                         </div>
                         <div class="cart__item__content__settings__delete">
-                          <button class="deleteItem"">Supprimer</button>
+                          <p class="deleteItem"">Supprimer</p>
                         </div>
                       </div>
                     </div>
@@ -166,7 +166,10 @@ function formulaire() {
 
     //Erreur en cas de non respect du regex
 
-    firstName.addEventListener('input', (e) => {
+    let order = document.getElementById('order');
+    //je recup l'id du bouton pour faire un event
+
+    order.addEventListener('click', (e) => {
         e.preventDefault();
         if (regexName.test(firstName.value) == false || firstName.value == "") {
             errorFirstName.innerHTML = "Veuillez saisir votre prenom";
@@ -177,7 +180,7 @@ function formulaire() {
         }
     });
 
-    lastName.addEventListener('input', (e) => {
+    order.addEventListener('click', (e) => {
         e.preventDefault();
         if (regexName.test(lastName.value) == false || lastName.value == "") {
             errorLastName.innerHTML = "Veuillez saisir votre nom";
@@ -188,7 +191,7 @@ function formulaire() {
         }
     });
 
-    address.addEventListener('input', (e) => {
+    order.addEventListener('click', (e) => {
         e.preventDefault();
         if (regexAddress.test(address.value) == false || address.value == "") {
             errorAddress.innerHTML = "Veuillez saisir une vraie adresse";
@@ -199,7 +202,7 @@ function formulaire() {
         }
     });
 
-    city.addEventListener('input', (e) => {
+    order.addEventListener('click', (e) => {
         e.preventDefault();
         if (regexCity.test(city.value) == false || city.value == "") {
             errorCity.innerHTML = "Veuillez saisir une vraie ville";
@@ -210,7 +213,7 @@ function formulaire() {
         }
     });
 
-    email.addEventListener('input', (e) => {
+    order.addEventListener('click', (e) => {
         e.preventDefault();
         if (regexEmail.test(email.value) == false || email.value == "") {
             errorEmail.innerHTML = "Email incorrect";
@@ -221,10 +224,6 @@ function formulaire() {
         }
     });
 
-
-  
-  let order = document.getElementById('order');
-  //je recup l'id du bouton pour faire un event
 
   order.addEventListener('click', (event) => {
     event.preventDefault();
